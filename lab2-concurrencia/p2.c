@@ -17,6 +17,9 @@ int turno = 0;
 
 void *funcion(void *arg) { // Solución del problema 2 del p1.c
     int mid = *(int *)arg;
+	int j;
+	double k;
+	int s;
 
     pthread_mutex_lock(&mutex);
     while (turno != mid) {
@@ -28,6 +31,12 @@ void *funcion(void *arg) { // Solución del problema 2 del p1.c
     turno = (turno + 1) % NUM_THREADS;  // le toca al siguiente
     pthread_cond_broadcast(&cond);
     pthread_mutex_unlock(&mutex);
+
+	for(j=0 ; j < ITER; j++) {
+		k = (double) rand_r((unsigned int *) &s) / RAND_MAX;	
+		usleep((int) (k * 100000));
+		printf("Ejecuta el thread %d iteracion %d \n", mid, j );
+	}
 
     pthread_exit(NULL);
 }
