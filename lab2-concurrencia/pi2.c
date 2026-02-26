@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <sys/time.h>
+#include <pthread.h>
 
 
 #define N 1E7
@@ -11,20 +12,28 @@
 
 double PI;
 
+typedef struct {
+    int id;
+    double partial;
+} thread_data_t;
+// Para poder evitar las carreras, se crea una estructura que almacenará el resultado parcial de cada hilo.
+// Antes, se competía por PI para sumar y no había un resultado determinista. Ahora la suma la hace el main.
 
-void calcula(int id){
-    double result=0.0, x;
+
+void *calcula(void *arg){
+    thread_data_t *data = (thread_data_t *)arg;
+    int id = data->id;
+    double result = 0.0, x;
     int i;
 
-    result = 0;
-    for (i=id; i<N; i=i+SIZE) {
-        x = d*i;
-        result+=sqrt(4*(1-x*x));
+    for (i = id; i < N; i = i + SIZE) {
+        x = d * i;
+        result += sqrt(4 * (1 - x * x));
     }
 
-    PI = PI + d*2*result;
-    return;
+    data->partial = d * 2 * result;
 
+    return NULL;
 }
 
 int main (int argc, char* argv[])
@@ -33,10 +42,25 @@ int main (int argc, char* argv[])
     struct timeval t1, t2;
     long t;
 
+    pthread_t th[SIZE];
+    thread_data_t td[SIZE];
+
     gettimeofday(&t1, 0);
 
-    for(i=0; i < SIZE; i++)
-        calcula(i);
+    for (i = 0; i < SIZE; i++) {
+        td[i].id = i;
+        td[i].partial = 0.0;
+        if (pthread_create(&th[i], NULL, calcula, &td[i]) != 0) {
+            perror("pthread_create");
+            return 1;
+        }
+    }
+
+    PI = 0.0;
+    for (i = 0; i < SIZE; i++) {
+        pthread_join(th[i], NULL);
+        PI += td[i].partial;
+    }
 
     gettimeofday(&t2, 0);
     t = (t2.tv_sec-t1.tv_sec)*1000000 + t2.tv_usec-t1.tv_usec;

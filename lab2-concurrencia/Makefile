@@ -1,4 +1,4 @@
-BIN_FILES  = p1 p2 p3 p4 p5 p6 p7
+BIN_FILES  = p1 p2 p3 p4 p5 pi pi2 p6 p7
 
 CC = gcc
 
@@ -13,6 +13,12 @@ p1: p1.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 p2: p2.o
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ $(LDLIBS) -o $@
+
+pi: pi.o
+	$(CC) $(CFLAGS) $(LDFLAGS) $^ $(LDLIBS) -o $@
+
+pi2: pi2.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ $(LDLIBS) -o $@
 
 p3: p3.o

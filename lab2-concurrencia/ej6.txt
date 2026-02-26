@@ -1,0 +1,20 @@
+En el material de apoyo se proporciona el código de un programa (pi.c) que calcula el número
+pi mediante el cálculo de la siguiente integral definida con el método de los trapecios.
+El programa pi2.c es una versión similar que está pensada como un primer paso para paralelizar el código
+y que pueda ser ejecutada por varios threads. Modifique el código pi2.c para que el cálculo sea hecho por
+una serie de threads en paralelo. El programa permite obtener el tiempo de ejecución. Compruebe cómo es
+el tiempo de ejecución de la versión secuencial respecto a la versión paralela. Para poder compilar estos
+programas deberá modificar previamente el archivo Makefile para incluir las reglas necesarias para su
+compilación.
+
+1º Modificar el makefile a la versión presente para poder ejecutar debidamente pi.c y pi2.calcula
+
+2º Ejecución de pi.c
+Salida: "El tiempo es de 35.408000 ms
+         PI = 3.141592854"
+
+3º Paralelización de pi2.c al estado final para su ejecución con threads
+Salida: "El tiempo es de 11.645000 ms
+         PI = 3.141592854"
+
+Como puede observarse, el tiempo de ejecución es significativamente más reducido con la ejecución paralela.
